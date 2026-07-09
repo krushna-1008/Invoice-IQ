@@ -1,0 +1,16 @@
+fastapi
+python-multipart
+sqlalchemy
+psycopg2-binary
+alembic
+uvicorn
+pytest
+pytest-asyncio
+httpx
+asyncpg
+redis
+celery
+anthropic
+pdf2image
+pillow
+fastmcp

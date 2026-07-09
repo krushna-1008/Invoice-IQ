@@ -1,0 +1,51 @@
+services:
+  api:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/invoiceiq
+      REDIS_URL: redis://redis:6379/0
+      CELERY_QUEUE_ENABLED: "true"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - invoice_storage:/app/storage
+    depends_on:
+      - postgres
+      - redis
+
+  worker:
+    build: .
+    command: celery -A app.workers.celery_app.celery_app worker --loglevel=INFO
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/invoiceiq
+      REDIS_URL: redis://redis:6379/0
+      CELERY_QUEUE_ENABLED: "true"
+    volumes:
+      - .:/app
+      - invoice_storage:/app/storage
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: invoiceiq
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
+  invoice_storage:
+
