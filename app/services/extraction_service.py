@@ -55,11 +55,13 @@ class ClaudeVisionInvoiceExtractor:
     def __init__(
         self,
         api_key: str | None = settings.anthropic_api_key,
-        model: str = settings.anthropic_model,
+        model: str | None = settings.anthropic_model,
         renderer: PDFImageRenderer | None = None,
     ) -> None:
         if not api_key:
             raise ExtractionError("ANTHROPIC_API_KEY is required for Claude extraction")
+        if not model:
+            raise ExtractionError("ANTHROPIC_MODEL is required for Claude extraction")
         try:
             import anthropic
         except ImportError as exc:

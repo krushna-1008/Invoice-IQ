@@ -5,7 +5,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class Settings:
     anthropic_api_key: str | None = os.getenv("ANTHROPIC_API_KEY")
-    anthropic_model: str = os.getenv("ANTHROPIC_MODEL", "claude-opus-4-8")
+    anthropic_model: str | None = os.getenv("ANTHROPIC_MODEL")
     redis_url: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
     api_keys: str = os.getenv("INVOICEIQ_API_KEYS", "tenant-1:dev-secret,demo-tenant:demo-secret")
     approval_token_secret: str = os.getenv("APPROVAL_TOKEN_SECRET", "dev-approval-token-secret")

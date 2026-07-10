@@ -6,6 +6,7 @@ celery_app = Celery(
     "invoiceiq",
     broker=settings.redis_url,
     backend=settings.redis_url,
+    include=["app.workers.extraction_worker"],
 )
 
 celery_app.conf.update(
@@ -15,4 +16,3 @@ celery_app.conf.update(
     accept_content=["json"],
     timezone="UTC",
 )
-

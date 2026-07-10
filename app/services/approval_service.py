@@ -63,7 +63,10 @@ class ApprovalService:
             raise ValueError("Approval not found")
         if not approval.token_hash or not hmac.compare_digest(approval.token_hash, self._hash_token(token)):
             raise ValueError("Invalid approval token")
-        if approval.token_expires_at and approval.token_expires_at < datetime.now(UTC):
+        expires_at = approval.token_expires_at
+        if expires_at and expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=UTC)
+        if expires_at and expires_at < datetime.now(UTC):
             raise ValueError("Approval token expired")
         return self._decide_approval(approval, decision, actor_id=approval.approver_id, token_used=True)
 
